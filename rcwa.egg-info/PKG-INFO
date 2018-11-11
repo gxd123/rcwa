@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: rcwa
+Version: 0.0.2
+Summary: This is a S4 wrapper to make your life easier
+Home-page: https://github.com/Luochenghuang/shared_lib
+Author: Luocheng Huang
+Author-email: luochengcheng@gmail.com
+License: UNKNOWN
+Description: # rcwa
+        A S4 wrapper to make RCWA simulations with ease. 
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2.7
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: Linux
+Description-Content-Type: text/markdown
