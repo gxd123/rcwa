@@ -1,2 +1,1 @@
-name = "rcwa"
-
+from rcwa import *
