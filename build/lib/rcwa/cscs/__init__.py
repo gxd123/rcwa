@@ -1,2 +1,2 @@
 
-import CSCS_to_features
+from CSCS_to_features import *

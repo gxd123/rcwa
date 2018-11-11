@@ -1,1 +1,1 @@
-from rcwa import *
+from .rcwa import *

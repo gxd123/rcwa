@@ -10,6 +10,8 @@ __maintainer__ = "Luocheng Huang"
 __email__ = "luocheng@uw.edu"
 __status__ = "Production"
 
+
+import S4
 import pandas as pd
 import os
 import numpy as np
@@ -17,7 +19,6 @@ import math
 import time as time
 from multiprocessing import Pool
 import matplotlib.pyplot as plt
-import S4
 
 
 

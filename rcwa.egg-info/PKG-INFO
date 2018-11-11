@@ -9,6 +9,9 @@ License: UNKNOWN
 Description: # rcwa
         A S4 wrapper to make RCWA simulations with ease. 
         
+        ## Installation 
+        pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.0.2.tar.gz
+        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 2.7
 Classifier: License :: OSI Approved :: MIT License
