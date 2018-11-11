@@ -6,3 +6,5 @@ rcwa.egg-info/PKG-INFO
 rcwa.egg-info/SOURCES.txt
 rcwa.egg-info/dependency_links.txt
 rcwa.egg-info/top_level.txt
+rcwa/cscs/CSCS_to_features.py
+rcwa/cscs/__init__.py
