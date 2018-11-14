@@ -21,11 +21,11 @@ for wavelength in [0.7, 0.54]:
         cscs_array.append(inpt)
 
 # start simulation
-new = RCWA(cscs_array, 19, field=1)
+new = RCWA(cscs_array, 19, field=1) # uses 19 cores and all the electric field of 1 unit cell
 df = new.simulate()
 
 # save simulation data
-df.to_csv(directory+Name+'.csv', index=False)
+df.to_csv('test.csv', index=False)
 ```
 
 ## CSCS
