@@ -2,20 +2,20 @@
 A S4 wrapper to make RCWA simulations with ease. 
 
 
-
+---
 ## Installation 
 
 `pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.0.2.tar.gz`
 
 
 
-
+---
 ## Dependencies
 S4
 
 
 
-
+---
 ## Usage
 ```python
 # make input array of CSCS strings
@@ -38,7 +38,7 @@ df.to_csv('test.csv', index=False)
 
 
 
-
+---
 ## CSCS
 <img src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.jpg" alt="some text"  width="1050" height="784">
 
