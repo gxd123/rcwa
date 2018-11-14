@@ -9,13 +9,6 @@ A S4 wrapper to make RCWA simulations with ease.
 S4
 
 ## CSCS
-
-<img src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.pdf" alt="some text"  width="4200" height="4200">
-
+<img src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.jpg" alt="some text"  width="4200" height="4200">
 
 
-<object data="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
