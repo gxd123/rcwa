@@ -1,5 +1,16 @@
+MANIFEST.in
 README.md
 setup.py
+n_data/Ag_n.csv
+n_data/Al_n.csv
+n_data/IPS_n.csv
+n_data/IPdip_n.csv
+n_data/IPdip_n.txt
+n_data/Si3N4_n.csv
+n_data/SiO2_n.csv
+n_data/TiO2_n.csv
+n_data/TiO2_n.txt
+n_data/Vacuum_n.csv
 rcwa/__init__.py
 rcwa/rcwa.py
 rcwa.egg-info/PKG-INFO

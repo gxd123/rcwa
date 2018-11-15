@@ -1,4 +1,4 @@
-Metadata-Version: 1.1
+Metadata-Version: 2.1
 Name: rcwa
 Version: 0.0.2
 Summary: This is a S4 wrapper to make your life easier
@@ -10,9 +10,14 @@ Description: # rcwa
         A S4 wrapper to make RCWA simulations with ease. 
         
         ## Installation 
-        pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.0.2.tar.gz
+        
+        `pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.0.2.tar.gz`
+        
+        ## Dependencies
+        S4
         
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 2.7
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: Linux
+Description-Content-Type: text/markdown
