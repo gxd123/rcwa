@@ -209,7 +209,7 @@ class RCWA:
                 given the material in string, wavelength in µm
                 output (n,k)
                 """
-                mat = pd.read_csv('/n_data/{}_n.csv'.format(material))
+                mat = pd.read_csv('../n_data/{}_n.csv'.format(material))
 
                 w = mat['Wavelength, µm']
                 n_list = mat['n']
