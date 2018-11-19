@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 recursive-include rcwa/n_data/ *.csv
-=======
-recursive-include n_data/ *.csv
->>>>>>> b56b69da120fa8d7de7d202a1945d8e69ca4c304
