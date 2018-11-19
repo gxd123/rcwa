@@ -18,12 +18,11 @@ import numpy as np
 import math
 import time as time
 from multiprocessing import Pool
+from os.path import join as pjoin
 import matplotlib.pyplot as plt
 
 
-
-#CWD = os.getcwd()+'/'
-
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
     
 def simulate_one(config, field=1):
@@ -209,7 +208,7 @@ class RCWA:
                 given the material in string, wavelength in µm
                 output (n,k)
                 """
-                mat = pd.read_csv('/n_data/{}_n.csv'.format(material))
+                mat = pd.read_csv(pjoin(dir_path,'data','n_data','{}_n.csv'.format(material)))
 
                 w = mat['Wavelength, µm']
                 n_list = mat['n']

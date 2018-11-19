@@ -1,1 +1,1 @@
-recursive-include rcwa/n_data/ *.csv
+recursive-include rcwa/data/n_data/ *.csv
