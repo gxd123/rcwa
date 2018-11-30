@@ -11,9 +11,15 @@ rcwa/cscs/CSCS_to_features.py
 rcwa/cscs/__init__.py
 rcwa/data/n_data/Ag_n.csv
 rcwa/data/n_data/Al_n.csv
+rcwa/data/n_data/Au_n.csv
+rcwa/data/n_data/C_n.csv
+rcwa/data/n_data/Cr_n.csv
+rcwa/data/n_data/Cu_n.csv
+rcwa/data/n_data/H2O_n.csv
 rcwa/data/n_data/IPS_n.csv
 rcwa/data/n_data/IPdip_n.csv
 rcwa/data/n_data/Si3N4_n.csv
 rcwa/data/n_data/SiO2_n.csv
+rcwa/data/n_data/Si_n.csv
 rcwa/data/n_data/TiO2_n.csv
 rcwa/data/n_data/Vacuum_n.csv
