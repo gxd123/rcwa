@@ -207,15 +207,33 @@ class RCWA:
                 """
                 given the material in string, wavelength in µm
                 output (n,k)
+                if given a list then return the first part as n, second part as k*j.
                 """
-                mat = pd.read_csv(pjoin(dir_path,'data','n_data','{}_n.csv'.format(material)))
+                
+                try:
+                    input_list = eval(material)
+                    
+                    if type(input_list) != list:
+                        raise Exception('Please use format: [n, k] for the matierla.')
+                    if len(input_list) != 2:
+                        raise Exception('Did you include k? Please use format: [n, k] for the material!')
+                    
+                    n = input_list[0]
+                    k = 1j*input_list[1]
 
-                w = mat['Wavelength, µm']
-                n_list = mat['n']
-                k_list = mat['k']
+                except:
+                    
+                    try:
+                        mat = pd.read_csv(pjoin(dir_path,'data','n_data','{}_n.csv'.format(material)))
+                    except:
+                        print('Material not found.')
+                    
+                    w = mat['Wavelength, µm']
+                    n_list = mat['n']
+                    k_list = mat['k']
 
-                n = np.interp(wavelength, w, n_list) # interpolate the refractive index value
-                k = np.interp(wavelength, w, k_list) # interpolate the k value
+                    n = np.interp(wavelength, w, n_list) # interpolate the refractive index value
+                    k = np.interp(wavelength, w, k_list) # interpolate the k value
 
                 return n + k*1j      
 
