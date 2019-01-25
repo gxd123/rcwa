@@ -1,0 +1,16 @@
+Use phoebe-p's for from github
+
+intstall cython in conda
+
+git clone https://github.com/phoebe-p/S4.git
+
+edit Makefile
+remove LUA_INC and LUA_LIB links
+remove pip3 install line
+
+
+run 'make'
+run 'make S4_pyext'
+
+use anaconda's pip to:
+pip install --upgrade ./
