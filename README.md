@@ -34,4 +34,4 @@ df.to_csv('test.csv', index=False)
 ## CSCS
 <img src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.jpg" alt="some text"  width="1050" height="784">
 
-
+You can also replace the material with [n, k] to manually input the refractive index.
