@@ -35,3 +35,4 @@ df.to_csv('test.csv', index=False)
 <img src="https://github.com/Luochenghuang/rcwa/raw/master/doc/CSCS%20Helper.jpg" alt="some text"  width="1050" height="784">
 
 You can also replace the material with [n, k] to manually input the refractive index.
+You can also add ellipse shapes by doing E(x,y,angle,(d1,d2)), where x and y are the center coordinates, angle is the rotation, d1 and d2 are the conjugate diameters.
