@@ -24,6 +24,30 @@ import matplotlib.pyplot as plt
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
+
+def parse_cscs(df, position_col):
+    """
+    input: (input_pd, {'column_name':'position', ...})
+    return: output_pd
+    """
+    
+    def row_to_values(row):
+        """converst a row of data into a list of values"""
+
+        new_str = row.replace('-',',').replace(')',',')\
+            .replace('(',',').replace('=',',').replace('/',',').\
+            replace(':',',').split(',')
+        return [x for x in new_str if x != ''] 
+
+    df['CSCS'] = df['CSCS'].apply(row_to_values)
+    
+    for key, position in position_col.iteritems():
+        df[key] = df['CSCS'].apply(lambda cscs: cscs[position])
+    
+    df = df.drop(columns=['CSCS'])
+    
+    return df
+
     
 def simulate_one(config, field=1):
     """a wrapper for pickling
@@ -274,8 +298,28 @@ class RCWA:
                                     Center = (coor[0],coor[1]),
                                     Radius = coor[2]
                                 )
+                        elif shape == 'E':
+                        # create ellipse
+                            if (coor[3][0] != 0) and (coor[3][1] != 0):
+                                S.SetRegionEllipse(
+                                    Layer = str(index),
+                                    Material = layer[0],
+                                    Center = (coor[0],coor[1]),
+                                    Angle = coor[2],
+                                    Halfwidths = coor[3],
+                                    )
+                        elif shape == 'R':
+                        # create rectangle
+                            if (coor[3][0] != 0) and (coor[3][1] != 0):
+                                S.SetRegionEllipse(
+                                    Layer = str(index),
+                                    Material = layer[0],
+                                    Center = (coor[0],coor[1]),
+                                    Angle = coor[2],
+                                    Halfwidths = coor[3],
+                                    )
                         elif shape == 'S':
-                        # create circle features
+                        # create square features
                             if coor[2] != 0:
                                 S.SetRegionSquare(
                                     Layer = str(index),
