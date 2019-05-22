@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rcwa",
-    version="0.0.2",
+    version="0.1.0",
     author="Luocheng Huang",
     author_email="luochengcheng@gmail.com",
     description="This is a S4 wrapper to make your life easier",

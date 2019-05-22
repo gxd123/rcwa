@@ -9,6 +9,7 @@ rcwa.egg-info/dependency_links.txt
 rcwa.egg-info/top_level.txt
 rcwa/cscs/CSCS_to_features.py
 rcwa/cscs/__init__.py
+rcwa/cscs/utils.py
 rcwa/data/n_data/._Si3N4_n.csv
 rcwa/data/n_data/Ag_n.csv
 rcwa/data/n_data/Al_n.csv

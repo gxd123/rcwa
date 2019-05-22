@@ -9,7 +9,7 @@ Name = '1'
 
 
 # configuration
-wavelengths = [0.633] # has to be in an array
+wavelengths = [0.633, 0.7] # has to be in an array
 periodicity = 0.7*0.633 # optimized for 560 nm
 grat_tkn = 1
 buff_tkn = 0.633
@@ -17,7 +17,7 @@ dbr_Si3N4 = 0.633 / 4.0 / 2.
 dbr_SiO2  = 0.633 / 4.0 / 1.457
 
 aspect_ratio = 6
-resolution = 300
+resolution = 
 
 
 # don't worry about
@@ -47,34 +47,8 @@ for w in wavelengths:
 new = RCWA(inputs, 19, field=1)
 df = new.simulate()
 
-df.to_csv(directory+Name+'.csv', index=False)
+parsed_df = parse_cscs(df, {'wl':1, 'r1':11})
+avg_df = take_avg(parsed_df)
+final_df = combine_colors(avg_df)
 
-
-# all this converts the RCWA E_Fields to phase and amplitude
-
-df_og = pd.read_csv(directory+Name+'.csv', engine = 'c')
-
-df = uppack_CSCS(df_og)
-df = extract_features(df, subdivision=subdivision, n_r = 1)
-df = df.drop(columns=['e_field','CSCS'])
-
-df_unq = df[df.wavelength == wavelengths[0]].copy(deep=True)
-df_unq = df_unq.drop(columns = ['p_avg', 't_avg', 'wavelength'])
-
-for wl in wavelengths:
-    df_unq['p_'+str(wl)] = df[np.isclose(df.wavelength, wl)].p_avg.tolist()
-    df_unq['t_'+str(wl)] = df[np.isclose(df.wavelength, wl)].t_avg.tolist()
-
-df_unq.to_csv(directory+Name+'_sub' + str(subdivision) + '.csv', index=False)
-
-
-
-df = pd.read_csv(directory+Name+'_sub' + str(subdivision) + '.csv', engine= 'c', delimiter=',', encoding="utf-8-sig")
-new_df = df.copy()
-
-for wl in wavelengths:
-    new_df['p_'+str(wl)] = new_df['p_'+str(wl)].apply(lambda x: eval(x)[0]/(6.28))
-    new_df['t_'+str(wl)] = new_df['t_'+str(wl)].apply(lambda x: eval(x)[0])
-
-    lines = new_df.plot.line(x='r1', y=['p_'+str(wl), 't_'+str(wl)])
-
+final_df.to_csv(directory)

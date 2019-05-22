@@ -1,10 +1,14 @@
 import pandas as pd
 import numpy as np
 from ast import literal_eval
+import warnings
 
 
 def to_r(CSCS):
-    """CSCS is a string, returns [r1, r2, r3, r4]"""
+    warnings.warn("This is deprecated! Please use parse_cscs")
+    """
+    This is deprecated!!
+    CSCS is a string, returns [r1, r2, r3, r4]"""
 
     f_list = CSCS.split('C')[1:]
     r = []
@@ -14,7 +18,9 @@ def to_r(CSCS):
 
 
 def extract_features(df_test, subdivision = 2, n_r = 4):
-
+    warnings.warn("This is deprecated! Please use parse_cscs")
+    """This is deprecated!!"""
+    
     # convert the CSCS to useful features
     for index, row in df_test.iterrows():
         r = to_r(row['CSCS'])
@@ -52,11 +58,18 @@ def extract_features(df_test, subdivision = 2, n_r = 4):
 
 
 def to_lambda(CSCS):
+    """This is deprecated!!"""
+    
     s = CSCS.split('-')
     return eval(s[1])
 
 def uppack_CSCS(df_test):
+    warnings.warn("This is deprecated! Please use parse_cscs")
+    """This is deprecated!!"""
+
     for index, row in df_test.iterrows():
         w = to_lambda(row['CSCS'])
         df_test.at[index,'wavelength'] = w
     return df_test
+
+
