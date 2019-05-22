@@ -1,5 +1,5 @@
 from rcwa import *
-from rcwa.cscs import *
+from rcwa import cscs
 import numpy as np
 import os
 
@@ -16,7 +16,7 @@ dbr_Si3N4 = 0.633 / 4.0 / 2.
 dbr_SiO2  = 0.633 / 4.0 / 1.457
 
 aspect_ratio = 6
-resolution = 100
+resolution = 10
 
 # Variables for the simulations
 max_r = periodicity / 2.
@@ -39,8 +39,8 @@ for w in wavelengths:
 new = RCWA(inputs, 19, field=1)
 df = new.simulate()
 
-parsed_df = parse_cscs(df, {'wl':1, 'r1':11})
-avg_df = take_avg(parsed_df)
-final_df = combine_colors(avg_df)
+parsed_df = cscs.parse_cscs(df, {'wl':1, 'r1':11})
+avg_df = cscs.take_avg(parsed_df)
+final_df = cscs.combine_colors(avg_df)
 
-final_df.to_csv(directory)
+final_df.to_csv(directory + 'pillar_data.csv')

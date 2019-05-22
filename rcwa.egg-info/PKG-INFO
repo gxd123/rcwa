@@ -11,7 +11,7 @@ Description: # rcwa
         
         ## Installation 
         
-        `pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.0.2.tar.gz`
+        `pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.1.0.tar.gz`
         
         
         ## Dependencies
