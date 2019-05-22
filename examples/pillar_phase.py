@@ -34,7 +34,6 @@ if not os.path.exists(directory):
 subdivision = 1
 
 
-
 # start RCWA
 inputs = []
 for w in wavelengths:
