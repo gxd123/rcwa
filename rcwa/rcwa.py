@@ -30,25 +30,25 @@ def parse_cscs(df, position_col):
     input: (input_pd, {'column_name':'position', ...})
     return: output_pd
     """
-    
+
     def row_to_values(row):
         """converst a row of data into a list of values"""
 
         new_str = row.replace('-',',').replace(')',',')\
             .replace('(',',').replace('=',',').replace('/',',').\
             replace(':',',').split(',')
-        return [x for x in new_str if x != ''] 
+        return [x for x in new_str if x != '']
 
     df['CSCS'] = df['CSCS'].apply(row_to_values)
-    
+
     for key, position in position_col.iteritems():
         df[key] = df['CSCS'].apply(lambda cscs: cscs[position])
-    
+
     df = df.drop(columns=['CSCS'])
-    
+
     return df
 
-    
+
 def simulate_one(config, field=1):
     """a wrapper for pickling
     simulates one instance
@@ -64,8 +64,8 @@ class RCWA:
     """
     An rcwa simulation ojbect
     """
-    
-    
+
+
     def __init__(self, input_list=None, cores=10, field = None):
         self.input = input_list
         self.cores = cores
@@ -76,8 +76,8 @@ class RCWA:
             else returns the center field."""
         FIELD = field
         pass
-    
-    
+
+
     def timeit(method):
         """a decor for timing methods, should be used as a decorator
         """
@@ -98,7 +98,7 @@ class RCWA:
     @timeit
     def simulate_and_graph(self):
         """
-        inputs the attribute list, 
+        inputs the attribute list,
         :return: simulate results
         """
 
@@ -106,7 +106,7 @@ class RCWA:
         df = pd.DataFrame()
         FIELD = self.field
         solution = p.map(simulate_one, self.input)  # create a pool of workers and map it onto different cores
-        p.close() # prevent memory leakage 
+        p.close() # prevent memory leakage
         p.join() # synchronization point
 
         t_list = []
@@ -145,19 +145,20 @@ class RCWA:
 
         pass
 
-    
+
     @timeit
     def simulate(self):
         """
-        inputs the attribute list, 
+        inputs the attribute list,
         :return: simulate results
         """
 
         p = Pool(self.cores)
         df = pd.DataFrame(self.input)
-        solution = p.map(simulate_one, self.input)  # create a pool of workers and map it onto different cores
+        # create a pool of workers and map it onto different cores
+        solution = p.map(simulate_one, self.input)
         solutions = pd.DataFrame(solution)
-        p.close() # prevent memory leakage 
+        p.close() # prevent memory leakage
         p.join() # synchronization point
 
         result = pd.concat([df, solutions], axis=1)
@@ -167,14 +168,14 @@ class RCWA:
         # new_p = unwrap(p_list)
 
         return result
-        
 
-    
-    
+
+
+
 
     class Simulation:
         """A simulation object"""
-        
+
         def __init__(self):
             self.layers = []
             self.basis = ((1,0),(0,1))
@@ -187,23 +188,24 @@ class RCWA:
             self.wavelength = None
             self.buffer = 0.1
             self.Nxy = 52
-        
-        
+
+
         def load_input(self,input_instance):
             """loades the canonical id into local variables"""
-            
-            
-            # the first step is to assign values to the variables from the input_instance
+
+
+            # the first step is to assign values to the variables from the
+            # input_instance
             parts = input_instance.split('/')
             first_arg = parts[0].split('-')
             if first_arg[0] == 't':
                 self.transmission = True
             elif first_arg[0] == 'r':
                 self.transmission = False
-            
+
             self.wavelength = float(first_arg[1])
             self.basis = eval(first_arg[2])
-            
+
             self.layers = parts[1:]
             layers_split = [layer.split('=') for layer in self.layers]
             self.layer_material = [layer_split[0] for layer_split in layers_split]
@@ -218,10 +220,10 @@ class RCWA:
                 else:
                     self.layer_thickness.append(float(x_split[0]))
                     self.layer_pattern.append(x_split[1].split('-'))
-                    
-                    
 
-        
+
+
+
         def run(self):
             """create layers and return a S4 object
             :type attr: dict
@@ -233,25 +235,25 @@ class RCWA:
                 output (n,k)
                 if given a list then return the first part as n, second part as k*j.
                 """
-                
+
                 try:
                     input_list = eval(material)
-                    
+
                     if type(input_list) != list:
                         raise Exception('Please use format: [n, k] for the matierla.')
                     if len(input_list) != 2:
                         raise Exception('Did you include k? Please use format: [n, k] for the material!')
-                    
+
                     n = input_list[0]
                     k = 1j*input_list[1]
 
                 except:
-                    
+
                     try:
                         mat = pd.read_csv(pjoin(dir_path,'data','n_data','{}_n.csv'.format(material)))
                     except:
                         print('Material not found.')
-                    
+
                     w = mat['Wavelength, µm']
                     n_list = mat['n']
                     k_list = mat['k']
@@ -259,7 +261,7 @@ class RCWA:
                     n = np.interp(wavelength, w, n_list) # interpolate the refractive index value
                     k = np.interp(wavelength, w, k_list) # interpolate the k value
 
-                return n + k*1j      
+                return n + k*1j
 
             # define the S object
             S = S4.New(Lattice=self.basis,
@@ -274,14 +276,18 @@ class RCWA:
             S.SetMaterial(Name='Vacuum', Epsilon=1.0)
 
             # define layers
-            S.AddLayer(Name='air_above', Thickness=self.buffer, Material='Vacuum')
+            S.AddLayer(Name='air_above', Thickness=self.buffer, \
+                        Material='Vacuum')
             index = 0
-            for layer in zip(self.layer_material, self.layer_thickness, self.layer_pattern):
+            for layer in zip(self.layer_material, \
+                             self.layer_thickness, self.layer_pattern):
                 index += 1
                 if layer[2] == None:
-                    S.AddLayer(Name=str(index), Thickness=layer[1], Material=layer[0])
+                    S.AddLayer(Name=str(index), Thickness=layer[1],\
+                                Material=layer[0])
                 else:
-                    S.AddLayer(Name=str(index), Thickness=layer[1], Material='Vacuum')
+                    S.AddLayer(Name=str(index), Thickness=layer[1], \
+                                Material='Vacuum')
                     if '+' in layer[2]:
                         patterns = layer[2].split('+')
                     else:
@@ -311,7 +317,7 @@ class RCWA:
                         elif shape == 'R':
                         # create rectangle
                             if (coor[3][0] != 0) and (coor[3][1] != 0):
-                                S.SetRegionEllipse(
+                                S.SetRegionRectangle(
                                     Layer = str(index),
                                     Material = layer[0],
                                     Center = (coor[0],coor[1]),
@@ -321,15 +327,23 @@ class RCWA:
                         elif shape == 'S':
                         # create square features
                             if coor[2] != 0:
-                                S.SetRegionSquare(
+                                S.SetRegionRectangle(
                                     Layer = str(index),
                                     Material = layer[0],
                                     Center = (coor[0],coor[1]),
                                     Angle = 0,
                                     Halfwidths = (coor[2], coor[2])
-                                    
                                 )
-            
+                        elif shape == 'P':
+                        # create a polygon
+                            S.SetRegionPolygon(
+                                    Layer = str(index),
+                                    Material = layer[0],
+                                    Center = (0,0),
+                                    Angle = 0,            # in degrees
+                                    Vertices = tuple(tuple(float(x) for x in i) for i in coor)
+                            )
+
             S.AddLayer(Name='below', Thickness=self.buffer, Material='Vacuum')
 
 
@@ -341,27 +355,28 @@ class RCWA:
 
             # For higher accuracy
             S.SetOptions(SubpixelSmoothing=True)
-            
+
             # e is array of dimension Nx by Ny, each element is a tuple of length 3
-            
+
             if  not self.transmission:
                 z_pos = self.buffer/(2.0)
             else:
                 z_pos = self.buffer*1.5+sum(self.layer_thickness)
-            
+
             e, h = S.GetFieldsOnGrid(z=z_pos, NumSamples=(self.Nxy, self.Nxy),
-                                     Format='Array')  
+                                     Format='Array')
             e = np.array(e)
             if not self.transmission:
                 e = e - np.exp(1j*2*np.pi/self.wavelength*self.buffer/2)
-                
+
             if FIELD==None:
-                e_field = np.mean(e[:,:,0])  # adding 1 removes incident wave 
-            else:                
+                e_field = np.mean(e[:,:,0])  # adding 1 removes incident wave
+            else:
                 (a,b,_) = np.shape(e)
                 edge = (1-FIELD)/2.0
-                e_field = e[int(a*edge):int(a*(1-edge)),int(b*edge):int(b*(1-edge)),0]
-                
+                e_field = e[int(a*edge):int(a*(1-edge)),\
+                int(b*edge):int(b*(1-edge)),0]
+
             e_field = np.round(e_field, 3)
-            
+
             return pd.Series(str(e_field.tolist()))
