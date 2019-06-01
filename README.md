@@ -7,7 +7,7 @@ A S4 wrapper to make RCWA simulations with ease.
 
 ## Test
 
-Go to the tests folder and run
+Go to the rcwa/tests/ folder and run
 `python -m unittest -v unit_test`
 
 
