@@ -16,6 +16,13 @@ class TestSimpleShapes(unittest.TestCase):
         check_sum = np.abs(np.sum(eval(df['e_field'][0])))
         self.assertEqual(check_sum, 2662.588867953143)
         
+    def test_multiple_patterns_different_materials(self):
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[3,0]|[1.5,0]=1:C(0,0,0.2)-[1,0]:C(0,0,0.1)']
+        S = rcwa.RCWA(inputs, 19, field=1)
+        df = S.simulate()
+        check_sum = np.abs(np.sum(eval(df['e_field'][0])))
+        self.assertEqual(check_sum, 2565.32736253056)
+        
     def test_shorthand(self):
         inputs = ['r-0.55-(0.5,0.),(0.,0.5)/[3,0]=1:C(0.2)/[1.5,0]=1/[0.05,4]=1.1']
         S = rcwa.RCWA(inputs, 19, field=1)
