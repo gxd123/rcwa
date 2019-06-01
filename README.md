@@ -5,6 +5,11 @@ A S4 wrapper to make RCWA simulations with ease.
 
 `pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.1.0.tar.gz`
 
+## Test
+
+Go to the rcwa/tests/ folder and run
+`python -m unittest -v unit_test`
+
 
 ## Dependencies
 S4
@@ -12,6 +17,7 @@ S4
 
 ## Usage
 ```python
+# this is just a snippet of the example.py in the example folder. Does not actually run.
 # make input array of CSCS strings
 cscs_array = []
 periodicity = 0.45
