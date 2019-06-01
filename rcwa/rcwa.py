@@ -278,20 +278,24 @@ class RCWA:
             # define layers
             S.AddLayer(Name='air_above', Thickness=self.buffer, \
                         Material='Vacuum')
-            index = 0
-            for layer in zip(self.layer_material, \
-                             self.layer_thickness, self.layer_pattern):
-                index += 1
-                if layer[2] == None:
-                    S.AddLayer(Name=str(index), Thickness=layer[1],\
-                                Material=layer[0])
+            # iterate through all layers seperated by '/'
+            for layer_index, _ in enumerate(self.layer_material):
+                # define the variables used for the layer
+                layer_material = self.layer_material[layer_index]
+                layer_thickness = self.layer_thickness[layer_index]
+                layer_pattern = self.layer_pattern[layer_index]
+                layer_name = str(layer_index)
+                
+                if layer_pattern == None:
+                    S.AddLayer(Name=layer_name, Thickness=layer_thickness,\
+                                Material=layer_material)
                 else:
-                    S.AddLayer(Name=str(index), Thickness=layer[1], \
+                    S.AddLayer(Name=layer_name, Thickness=layer_thickness, \
                                 Material='Vacuum')
-                    if '+' in layer[2]:
-                        patterns = layer[2].split('+')
+                    if '+' in layer_pattern:
+                        patterns = layer_pattern.split('+')
                     else:
-                        patterns = layer[2]
+                        patterns = layer_pattern
                     for pattern in patterns:
                         shape = pattern[0]
                         coor = eval(pattern[1:])
@@ -299,8 +303,8 @@ class RCWA:
                             # create circle features
                             if coor[2] != 0:
                                 S.SetRegionCircle(
-                                    Layer = str(index),
-                                    Material = layer[0],
+                                    Layer = layer_name,
+                                    Material = layer_material,
                                     Center = (coor[0],coor[1]),
                                     Radius = coor[2]
                                 )
@@ -308,8 +312,8 @@ class RCWA:
                         # create ellipse
                             if (coor[3][0] != 0) and (coor[3][1] != 0):
                                 S.SetRegionEllipse(
-                                    Layer = str(index),
-                                    Material = layer[0],
+                                    Layer = layer_name,
+                                    Material = layer_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = coor[2],
                                     Halfwidths = coor[3],
@@ -318,8 +322,8 @@ class RCWA:
                         # create rectangle
                             if (coor[3][0] != 0) and (coor[3][1] != 0):
                                 S.SetRegionRectangle(
-                                    Layer = str(index),
-                                    Material = layer[0],
+                                    Layer = layer_name,
+                                    Material = layer_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = coor[2],
                                     Halfwidths = coor[3],
@@ -328,8 +332,8 @@ class RCWA:
                         # create square features
                             if coor[2] != 0:
                                 S.SetRegionRectangle(
-                                    Layer = str(index),
-                                    Material = layer[0],
+                                    Layer = layer_name,
+                                    Material = layer_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = 0,
                                     Halfwidths = (coor[2], coor[2])
@@ -337,8 +341,8 @@ class RCWA:
                         elif shape == 'P':
                         # create a polygon
                             S.SetRegionPolygon(
-                                    Layer = str(index),
-                                    Material = layer[0],
+                                    Layer = layer_name,
+                                    Material =layer_material,
                                     Center = (0,0),
                                     Angle = 0,            # in degrees
                                     Vertices = tuple(tuple(float(x) for x in i) for i in coor)
