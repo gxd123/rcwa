@@ -10,27 +10,41 @@ import unittest
 class TestSimpleShapes(unittest.TestCase):
     
     def test_combo_geometries(self):
-        inputs = ['r-0.55-(0.5,0.),(0.,0.5)/TiO2=1:C(0,0,0.2)/SiO2=1/Ag=1.1']
+        inputs = ['r-0.55-(0.5,0.),(0.,0.5)/[3,0]=1:C(0,0,0.2)/[1.5,0]=1/[0.05,4]=1.1']
         S = rcwa.RCWA(inputs, 19, field=1)
         df = S.simulate()
         check_sum = np.abs(np.sum(eval(df['e_field'][0])))
-        self.assertEqual(check_sum, 2470.1178851384807)
+        self.assertEqual(check_sum, 2662.588867953143)
+        
+    def test_shorthand(self):
+        inputs = ['r-0.55-(0.5,0.),(0.,0.5)/[3,0]=1:C(0.2)/[1.5,0]=1/[0.05,4]=1.1']
+        S = rcwa.RCWA(inputs, 19, field=1)
+        df = S.simulate()
+        check_sum = np.abs(np.sum(eval(df['e_field'][0])))
+        self.assertEqual(check_sum, 2662.588867953143)
+        
+    def test_different_medium(self):
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[2,0]|[1.5,0]=1:C(0,0,0.25)']
+        S = rcwa.RCWA(inputs, 19, field=1)
+        df = S.simulate()
+        check_sum = np.abs(np.sum(eval(df['e_field'][0])))
+        self.assertEqual(check_sum, 2693.8634350562393)
         
     def test_just_a_slab(self):
-        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1']
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[3,0]=1']
         S = rcwa.RCWA(inputs, 19, field=1)
         df = S.simulate()
         check_sum = np.abs(np.sum(eval(df['e_field'][0])))
-        self.assertEqual(check_sum, 2476.633736021537)
+        self.assertEqual(check_sum, 2531.996781040608)
         
     def test_multiprocessing(self):
-        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1', 't-0.55-(0.5,0.),(0.,0.5)/TiO2=2']
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[3,0]=1', 't-0.55-(0.5,0.),(0.,0.5)/[3,0]=2']
         S = rcwa.RCWA(inputs, 19, field=1)
         df = S.simulate()
         check_sum1 = np.abs(np.sum(eval(df['e_field'][0])))
         check_sum2 = np.abs(np.sum(eval(df['e_field'][1])))
-        self.assertEqual(check_sum1, 2476.633736021537)
-        self.assertEqual(check_sum2, 2122.8122223126566)
+        self.assertEqual(check_sum1, 2531.996781040608)
+        self.assertEqual(check_sum2, 2192.5555364934316)
         
     def test_circle(self):
         inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1:C(0,0,0.22)', \
@@ -97,4 +111,11 @@ class TestSimpleShapes(unittest.TestCase):
         df = S.simulate()
         check_sum1 = np.abs(np.sum(eval(df['e_field'][0])))
         self.assertEqual(check_sum1, 1000.2224936532872)
+
+    def test_multiple_patterns(self):
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1:C(0,0,0.1)-C(0.2,0,0.1)-C(0,0.2,0.1)']
+        S = rcwa.RCWA(inputs, 19, field=1)
+        df = S.simulate(debug=True)
+        check_sum1 = np.abs(np.sum(eval(df['e_field'][0])))
+        self.assertEqual(check_sum1, 1419.2905704502514)
 

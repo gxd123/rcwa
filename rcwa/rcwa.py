@@ -20,6 +20,7 @@ import time as time
 from multiprocessing import Pool
 from os.path import join as pjoin
 import matplotlib.pyplot as plt
+import re
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -147,7 +148,7 @@ class RCWA:
 
 
     @timeit
-    def simulate(self):
+    def simulate(self, debug=False):
         """
         inputs the attribute list,
         :return: simulate results
@@ -156,7 +157,10 @@ class RCWA:
         p = Pool(self.cores)
         df = pd.DataFrame(self.input)
         # create a pool of workers and map it onto different cores
-        solution = p.map(simulate_one, self.input)
+        if debug:
+            solution = map(simulate_one, self.input)
+        else:
+            solution = p.map(simulate_one, self.input)
         solutions = pd.DataFrame(solution)
         p.close() # prevent memory leakage
         p.join() # synchronization point
@@ -168,9 +172,6 @@ class RCWA:
         # new_p = unwrap(p_list)
 
         return result
-
-
-
 
 
     class Simulation:
@@ -193,7 +194,6 @@ class RCWA:
         def load_input(self,input_instance):
             """loades the canonical id into local variables"""
 
-
             # the first step is to assign values to the variables from the
             # input_instance
             parts = input_instance.split('/')
@@ -209,20 +209,21 @@ class RCWA:
             self.layers = parts[1:]
             layers_split = [layer.split('=') for layer in self.layers]
             self.layer_material = [layer_split[0] for layer_split in layers_split]
+            # split_2 is everything after the '=' for each layer
             split_2 = [layer_split[1] for layer_split in layers_split]
             self.layer_thickness = []
             self.layer_pattern = []
             for x in split_2:
                 x_split = x.split(':')
                 if len(x_split) == 1:
+                    # if there's only 1 number that means a homogenous layer
                     self.layer_thickness.append(float(x_split[0]))
                     self.layer_pattern.append(None)
                 else:
+                    # if there's one or multiple shapes
                     self.layer_thickness.append(float(x_split[0]))
-                    self.layer_pattern.append(x_split[1].split('-'))
-
-
-
+                    self.layer_pattern.append(':'.join(x_split[1:]).split('-'))
+                    
 
         def run(self):
             """create layers and return a S4 object
@@ -269,10 +270,19 @@ class RCWA:
 
             # define materials
             for material in set(self.layer_material):
-                n = querry_n(material,self.wavelength)
-                # defines permittivity in terms of refractive index
-                eps = n**2
-                S.SetMaterial(Name=material, Epsilon=eps)
+                if '|' in material:
+                    doublet = material.split('|')
+                    layer_medium = doublet[1] # the second material is the medium
+                    layer_material = doublet[0] # the first material is the shape material
+                    n1 = querry_n(layer_medium,self.wavelength)
+                    n2 = querry_n(layer_material,self.wavelength)
+                    S.SetMaterial(Name=layer_medium, Epsilon=n1**2)
+                    S.SetMaterial(Name=layer_material, Epsilon=n2**2)
+                else:
+                    n = querry_n(material,self.wavelength)
+                    # defines permittivity in terms of refractive index
+                    eps = n**2
+                    S.SetMaterial(Name=material, Epsilon=eps)
             S.SetMaterial(Name='Vacuum', Epsilon=1.0)
 
             # define layers
@@ -290,21 +300,36 @@ class RCWA:
                     S.AddLayer(Name=layer_name, Thickness=layer_thickness,\
                                 Material=layer_material)
                 else:
+                    # the default layer medium (the materials fills the space)
+                    layer_medium = 'Vacuum' 
+                    if '|' in layer_material:
+                        doublet = layer_material.split('|')
+                        layer_medium = doublet[1] # the second material is the medium
+                        layer_material = doublet[0] # the first material is the shape material
                     S.AddLayer(Name=layer_name, Thickness=layer_thickness, \
-                                Material='Vacuum')
-                    if '+' in layer_pattern:
-                        patterns = layer_pattern.split('+')
-                    else:
-                        patterns = layer_pattern
-                    for pattern in patterns:
+                                Material=layer_medium)
+                    
+                    # iterate the patterns
+                    for pattern in layer_pattern:
+                        mat_and_pattern = pattern.split(':')
+                        if len(mat_and_pattern) == 1:
+                            pattern_material = layer_material
+                        elif len(mat_and_pattern) == 2:
+                            pattern_material = mat_and_pattern[0]
+                            n = querry_n(pattern_material, self.wavelength)
+                            S.SetMaterial(Name=pattern_material, Epsilon=n**2)
+                            pattern = mat_and_pattern[1]
+                        else:
+                            raise Exception('Too many ":" in layer {}!'.format(layer_index))
                         shape = pattern[0]
                         coor = eval(pattern[1:])
                         if shape == 'C':
                             # create circle features
+                            if type(coor)==float or type(coor)==int: coor = (0, 0, coor)
                             if coor[2] != 0:
                                 S.SetRegionCircle(
                                     Layer = layer_name,
-                                    Material = layer_material,
+                                    Material = pattern_material,
                                     Center = (coor[0],coor[1]),
                                     Radius = coor[2]
                                 )
@@ -313,7 +338,7 @@ class RCWA:
                             if (coor[3][0] != 0) and (coor[3][1] != 0):
                                 S.SetRegionEllipse(
                                     Layer = layer_name,
-                                    Material = layer_material,
+                                    Material = pattern_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = coor[2],
                                     Halfwidths = coor[3],
@@ -323,17 +348,19 @@ class RCWA:
                             if (coor[3][0] != 0) and (coor[3][1] != 0):
                                 S.SetRegionRectangle(
                                     Layer = layer_name,
-                                    Material = layer_material,
+                                    Material = pattern_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = coor[2],
                                     Halfwidths = coor[3],
                                     )
                         elif shape == 'S':
                         # create square features
+                            # if there is only 1 argument
+                            if type(coor)==float or type(coor)==int: coor = (0, 0, coor)
                             if coor[2] != 0:
                                 S.SetRegionRectangle(
                                     Layer = layer_name,
-                                    Material = layer_material,
+                                    Material = pattern_material,
                                     Center = (coor[0],coor[1]),
                                     Angle = 0,
                                     Halfwidths = (coor[2], coor[2])
@@ -342,7 +369,7 @@ class RCWA:
                         # create a polygon
                             S.SetRegionPolygon(
                                     Layer = layer_name,
-                                    Material =layer_material,
+                                    Material =pattern_material,
                                     Center = (0,0),
                                     Angle = 0,            # in degrees
                                     Vertices = tuple(tuple(float(x) for x in i) for i in coor)
