@@ -222,7 +222,7 @@ class RCWA:
                 else:
                     # if there's one or multiple shapes
                     self.layer_thickness.append(float(x_split[0]))
-                    self.layer_pattern.append(':'.join(x_split[1:]).split('-'))
+                    self.layer_pattern.append(':'.join(x_split[1:]).split('+'))
                     
 
         def run(self):

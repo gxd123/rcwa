@@ -17,7 +17,7 @@ class TestSimpleShapes(unittest.TestCase):
         self.assertEqual(check_sum, 2662.588867953143)
         
     def test_multiple_patterns_different_materials(self):
-        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[3,0]|[1.5,0]=1:C(0,0,0.2)-[1,0]:C(0,0,0.1)']
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/[3,0]|[1.5,0]=1:C(0,0,0.2)+[1,0]:C(0,0,0.1)']
         S = rcwa.RCWA(inputs, 19, field=1)
         df = S.simulate()
         check_sum = np.abs(np.sum(eval(df['e_field'][0])))
@@ -120,7 +120,7 @@ class TestSimpleShapes(unittest.TestCase):
         self.assertEqual(check_sum1, 1000.2224936532872)
 
     def test_multiple_patterns(self):
-        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1:C(0,0,0.1)-C(0.2,0,0.1)-C(0,0.2,0.1)']
+        inputs = ['t-0.55-(0.5,0.),(0.,0.5)/TiO2=1:C(0,0,0.1)+C(0.2,0,0.1)+C(0,0.2,0.1)']
         S = rcwa.RCWA(inputs, 19, field=1)
         df = S.simulate(debug=True)
         check_sum1 = np.abs(np.sum(eval(df['e_field'][0])))
