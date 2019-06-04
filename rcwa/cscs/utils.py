@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-def parse_cscs(df, position_col):
+def parse_cscs(df, position_col, drop_cscs=True):
     """
     input: (input_pd, {'column_name':'position', ...})
     return: output_pd
@@ -22,7 +22,8 @@ def parse_cscs(df, position_col):
         df[key] = df['parsed'].apply(lambda cscs: cscs[position])
     
     df = df.drop(['parsed'], axis=1)
-    df = df.drop(['CSCS'], axis=1)
+    if drop_cscs: 
+        df = df.drop(['CSCS'], axis=1)
     
     return df
 
