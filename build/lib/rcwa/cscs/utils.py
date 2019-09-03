@@ -13,7 +13,7 @@ def parse_cscs(df, position_col, drop_cscs=True):
 
         new_str = row.replace('-',',').replace(')',',')\
             .replace('(',',').replace('=',',').replace('/',',').\
-            replace(':',',').split(',')
+            replace(':',',').replace('[',',').replace(']',',').split(',')
         return [x for x in new_str if x != ''] 
 
     df['parsed'] = df['CSCS'].apply(row_to_values)

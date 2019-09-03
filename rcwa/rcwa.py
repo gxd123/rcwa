@@ -56,21 +56,22 @@ def simulate_one(config, field=1):
     """
     global FIELD
     FIELD = field
-    new = RCWA.Simulation()
+    new = RCWA.Simulation(Nxy=RCWA.Nxy)
     new.load_input(config)
     return new.run()
 
 
-class RCWA:
+class RCWA(object):
     """
     An rcwa simulation ojbect
     """
 
 
-    def __init__(self, input_list=None, cores=10, field = None):
+    def __init__(self, input_list=None, cores=10, field = None, Nxy=52):
         self.input = input_list
         self.cores = cores
         self.field = field
+        self.Nxy = Nxy
         global FIELD
         """field is the amount of field in the center measured. 1 is 100% .5 is 25%
             returns the mean value if field==None
@@ -177,7 +178,7 @@ class RCWA:
     class Simulation:
         """A simulation object"""
 
-        def __init__(self):
+        def __init__(self, Nxy='default'):
             self.layers = []
             self.basis = ((1,0),(0,1))
             self.NumBasis=150
@@ -188,7 +189,9 @@ class RCWA:
             self.transmission = None
             self.wavelength = None
             self.buffer = 0.1
-            self.Nxy = 52
+            self.Nxy = Nxy
+            if self.Nxy == 'default':
+                raise ValueError, 'Nxy not given'
 
 
         def load_input(self,input_instance):
@@ -223,7 +226,7 @@ class RCWA:
                     # if there's one or multiple shapes
                     self.layer_thickness.append(float(x_split[0]))
                     self.layer_pattern.append(':'.join(x_split[1:]).split('+'))
-                    
+
 
         def run(self):
             """create layers and return a S4 object
@@ -295,20 +298,20 @@ class RCWA:
                 layer_thickness = self.layer_thickness[layer_index]
                 layer_pattern = self.layer_pattern[layer_index]
                 layer_name = str(layer_index)
-                
+
                 if layer_pattern == None:
                     S.AddLayer(Name=layer_name, Thickness=layer_thickness,\
                                 Material=layer_material)
                 else:
                     # the default layer medium (the materials fills the space)
-                    layer_medium = 'Vacuum' 
+                    layer_medium = 'Vacuum'
                     if '|' in layer_material:
                         doublet = layer_material.split('|')
                         layer_medium = doublet[1] # the second material is the medium
                         layer_material = doublet[0] # the first material is the shape material
                     S.AddLayer(Name=layer_name, Thickness=layer_thickness, \
                                 Material=layer_medium)
-                    
+
                     # iterate the patterns
                     for pattern in layer_pattern:
                         mat_and_pattern = pattern.split(':')
