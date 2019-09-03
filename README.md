@@ -3,7 +3,7 @@ A S4 wrapper to make RCWA simulations with ease.
 
 ## Installation 
 
-`pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.1.0.tar.gz`
+`pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.2.0.tar.gz`
 
 ## Test
 
@@ -67,7 +67,7 @@ Alternatively use `S(radius)` for shorthand which defaults x, y = 0, 0
 Add a rectangle by `R(x, y, angle, (x_halfwidth, y_halfwidth))` where angle is in degrees
 
 ### Ellipse
-Add an ellipse by using `E(x, y, angle, (d1, d2))`, where x and y are the center coordinates, angle is the rotation, d1 and d2 are the conjugate diameters.
+Add an ellipse by using `E(x, y, angle, (r1, r2))`, where x and y are the center coordinates, angle is the rotation, r1 and r2 are the conjugate diameters/2.
 
 ### Polygon
 Add a polygon by using `P((x1, y1), (x2, y2), ... , (x1, y1))` where xn, yn, is a vertex pair.
