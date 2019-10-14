@@ -3,7 +3,7 @@ A S4 wrapper to make RCWA simulations with ease.
 
 ## Installation 
 
-`pip install https://github.com/Luochenghuang/rcwa/raw/master/dist/rcwa-0.1.0.tar.gz`
+`pip install https://github.com/Luochenghuang/rcwa/blob/hot_fix/dist/rcwa-0.2.0.tar.gz`
 
 ## Test
 
