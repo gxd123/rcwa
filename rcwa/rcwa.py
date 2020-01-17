@@ -211,6 +211,7 @@ class RCWA:
             self.layer_material = [layer_split[0] for layer_split in layers_split]
             # split_2 is everything after the '=' for each layer
             split_2 = [layer_split[1] for layer_split in layers_split]
+            # layer_thickness is a list of thicknesses for each layer
             self.layer_thickness = []
             self.layer_pattern = []
             for x in split_2:
@@ -390,8 +391,10 @@ class RCWA:
             # e is array of dimension Nx by Ny, each element is a tuple of length 3
 
             if  not self.transmission:
+                # if in transmission, the monitor is 0.5*buffer away from the structure
                 z_pos = self.buffer/(2.0)
             else:
+                # if in transmission, the monitor is 1.5*buffer away from the structure
                 z_pos = self.buffer*1.5+sum(self.layer_thickness)
 
             e, h = S.GetFieldsOnGrid(z=z_pos, NumSamples=(self.Nxy, self.Nxy),
